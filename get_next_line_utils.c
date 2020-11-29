@@ -6,7 +6,22 @@
 /*   By: pdruart <pdruart@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/28 17:22:45 by pdruart       #+#    #+#                 */
-/*   Updated: 2020/11/28 17:22:46 by pdruart       ########   odam.nl         */
+/*   Updated: 2020/11/29 13:29:02 by pdruart       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "get_next_line.h"
+
+off_t	find_newline(char *str)
+{
+	off_t	off;
+
+	off = 0;
+	while (str[off] != '\0')
+	{
+		if (str[off] == '\n')
+			return (off);
+		off++;
+	}
+	return (-1);
+}
