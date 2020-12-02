@@ -6,29 +6,31 @@
 /*   By: pdruart <pdruart@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/28 17:22:29 by pdruart       #+#    #+#                 */
-/*   Updated: 2020/11/29 14:18:46 by pdruart       ########   odam.nl         */
+/*   Updated: 2020/12/02 16:56:41 by pdruart       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include "unistd.h"
 
 int	get_next_line(int fd, char **line)
 {
-	ssize_t			ret;
-	off_t			temp;
-	static off_t	off;
-	char			buff[BUFFER_SIZE + 1];
+	static t_string_buffer	*buff;
+	ssize_t					ret;
+	char					temp[BUFFER_SIZE + 1];
 
 	if (line == NULL)
 		return (-1);
-	buff[BUFFER_SIZE] = '\0';
-	temp = -1;
-	ret = pread(fd, buff, BUFFER_SIZE, off);
-	while (ret == 1 && temp == -1)
+	buff = malloc(sizeof(t_string_buffer));
+	buff->next = NULL;
+	ret = read(fd, temp, BUFFER_SIZE);
+	buff->str = temp;
+	while (ret > 0 && temp == -1)
 	{
-		temp = find_newline(buff);
-		off += (temp != -1) ? temp : BUFFER_SIZE;
-		ret = pread(fd, buff, BUFFER_SIZE, off);
+		sleep(1);
+		write(1, &buff, BUFFER_SIZE);
+		write(1, "\n", 1);
+		ret = read(fd, temp, BUFFER_SIZE);
 	}
 	return (ret);
 }
