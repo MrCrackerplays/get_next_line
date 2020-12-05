@@ -6,13 +6,15 @@
 /*   By: pdruart <pdruart@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/28 17:21:17 by pdruart       #+#    #+#                 */
-/*   Updated: 2020/12/02 15:39:36 by pdruart       ########   odam.nl         */
+/*   Updated: 2020/12/05 13:04:14 by pdruart       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
-# define BUFFER_SIZE 1
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 1
+# endif
 # include "unistd.h"
 
 typedef	struct	s_string_buffer
