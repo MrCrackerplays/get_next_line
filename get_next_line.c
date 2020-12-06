@@ -6,7 +6,7 @@
 /*   By: pdruart <pdruart@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/28 17:22:29 by pdruart       #+#    #+#                 */
-/*   Updated: 2020/12/05 14:00:02 by pdruart       ########   odam.nl         */
+/*   Updated: 2020/12/06 17:54:04 by pdruart       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,10 @@ int				get_next_line(int fd, char **line)
 	ssize_t					ret;
 	char					temp_str[BUFFER_SIZE + 1];
 	t_string_buffer			*relative;
+	off_t					pos;
 
 	if (line == NULL || fd < 0 || BUFFER_SIZE < 1)
 		return (-1);
-		temp_str[BUFFER_SIZE] = 0;
-	ret = read(fd, temp_str, BUFFER_SIZE);
 	if (buff == NULL)
 	{
 		buff = malloc(sizeof(t_string_buffer));
@@ -58,21 +57,33 @@ int				get_next_line(int fd, char **line)
 			return (-1);
 		buff->next = NULL;
 	}
+	ret = read(fd, temp_str, BUFFER_SIZE);
+	temp_str[ret] = 0;
+	pos = find_newline(&temp_str[0]);
 	relative = get_last(buff);
 	relative->str = temp_str;
 	write(1, "8", 1);
 	if (ret > 0)
 		write(1, "7", 1);
-	while (ret > 0)
+	while (ret > 0 && pos == -1)
 	{
-  		sleep(1);
-		test(temp_str);
+		sleep(1);
+//		test(temp_str);
 		relative->next = malloc(sizeof(t_string_buffer));
 		if (relative->next == NULL)
 			return (cleanup(&buff));
+		relative = relative->next;
+		relative->next = NULL;
 		relative->str = temp_str;
 		write(1, "6", 1);
 		ret = read(fd, temp_str, BUFFER_SIZE);
+		temp_str[ret] = 0;
+		pos = find_newline(&temp_str[0]);
+		*line = relative->str;
+		//don't seem to work idk fix it
 	}
+	write(1, "~", 1);
+	if (ret != 0)
+		ret = (ret < 0) ? ret / -ret : ret / ret;
 	return (ret);
 }
