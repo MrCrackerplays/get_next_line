@@ -6,20 +6,12 @@
 /*   By: pdruart <pdruart@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/11/28 17:22:29 by pdruart       #+#    #+#                 */
-/*   Updated: 2020/12/06 17:54:04 by pdruart       ########   odam.nl         */
+/*   Updated: 2020/12/09 16:48:48 by pdruart       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include "unistd.h"
 #include "stdlib.h"
-
-t_string_buffer	*get_last(t_string_buffer *buff)
-{
-	while (buff->next != NULL)
-		buff = buff->next;
-	return (buff);
-}
 
 void test(char *s)
 {
@@ -27,17 +19,6 @@ void test(char *s)
 	while (s[i] != '\0')
 		i++;
 	write(1, s, i);
-}
-
-int				cleanup(t_string_buffer **buff)
-{
-	if ((*buff)->next != NULL)
-		cleanup(&((*buff)->next));
-	free((*buff)->str);
-	free((*buff)->next);
-	free(*buff);
-	*buff = NULL;
-	return (-1);
 }
 
 int				get_next_line(int fd, char **line)
@@ -56,34 +37,47 @@ int				get_next_line(int fd, char **line)
 		if (buff == NULL)
 			return (-1);
 		buff->next = NULL;
+		buff->depth = 0;
 	}
-	ret = read(fd, temp_str, BUFFER_SIZE);
-	temp_str[ret] = 0;
-	pos = find_newline(&temp_str[0]);
+	// write(1, "2", 1);
 	relative = get_last(buff);
+	// write(1, "a", 1);
+	// pos = find_newline(relative->str);
+	// write(1, "b", 1);
+	ret = read(fd, temp_str, BUFFER_SIZE);
+	// write(1, "c", 1);
+	pos = find_newline(&temp_str[0]);
+	// write(1, "d", 1);
+	temp_str[ret] = 0;
 	relative->str = temp_str;
-	write(1, "8", 1);
-	if (ret > 0)
-		write(1, "7", 1);
+	// write(1, "3", 1);
 	while (ret > 0 && pos == -1)
 	{
-		sleep(1);
+		relative->str = temp_str;
+		// sleep(1);
 //		test(temp_str);
+		// write(1, "@", 1);
+		ret = read(fd, temp_str, BUFFER_SIZE);
+		if (ret == 0)
+			break;
 		relative->next = malloc(sizeof(t_string_buffer));
 		if (relative->next == NULL)
 			return (cleanup(&buff));
+		// write(1, "#", 1);
+		relative->next->depth = relative->depth + 1;
+		// write(1, "&", 1);
 		relative = relative->next;
+		// write(1, "$", 1);
 		relative->next = NULL;
-		relative->str = temp_str;
-		write(1, "6", 1);
-		ret = read(fd, temp_str, BUFFER_SIZE);
+		// write(1, "~", 1);
 		temp_str[ret] = 0;
 		pos = find_newline(&temp_str[0]);
-		*line = relative->str;
-		//don't seem to work idk fix it
 	}
-	write(1, "~", 1);
+	// write(1, "4", 1);
+	*line = combine_string(buff, relative->depth, pos);
+	// write(1, "5", 1);
 	if (ret != 0)
-		ret = (ret < 0) ? ret / -ret : ret / ret;
+		ret = (ret < 0) ? -1 : 1;
+	// write(1, "6", 1);
 	return (ret);
 }
