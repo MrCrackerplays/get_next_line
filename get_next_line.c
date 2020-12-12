@@ -5,79 +5,133 @@
 /*                                                     +:+                    */
 /*   By: pdruart <pdruart@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2020/11/28 17:22:29 by pdruart       #+#    #+#                 */
-/*   Updated: 2020/12/09 16:48:48 by pdruart       ########   odam.nl         */
+/*   Created: 2020/12/12 11:10:34 by pdruart       #+#    #+#                 */
+/*   Updated: 2020/12/12 15:01:11 by pdruart       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include "unistd.h"
 #include "stdlib.h"
 
-void test(char *s)
+t_str_buffer	*new_buffer(int depth, char *str)
 {
-	int i = 0;
-	while (s[i] != '\0')
+	t_str_buffer	*buff;
+	ssize_t			i;
+
+	if (str == NULL)
+		return (NULL);
+	buff = malloc(sizeof(t_str_buffer));
+	if (buff == NULL)
+		return (NULL);
+	i = 0;
+	while (str[i] != '\0')
 		i++;
-	write(1, s, i);
+	buff->str = malloc((i + 1) * sizeof(char));
+	if (buff->str == NULL)
+	{
+		free(buff);
+		return (NULL);
+	}
+	while (i >= 0)
+	{
+		buff->str[i] = str[i];
+		i--;
+	}
+	buff->depth = depth;
+	buff->next = NULL;
+	return (buff);
+}
+
+int				ft_strlen(char *str)
+{
+	int	i;
+
+	if (str == NULL)
+		return (0);
+	i = 0;
+	while (str[i] != '\0')
+		i++;
+	return (i);
+}
+
+void			str_join(char **original, char *addition)
+{
+	char	*temp;
+	int		i;
+	int		j;
+
+	i = ft_strlen(*original);
+	j = ft_strlen(addition);
+	temp = malloc(i + j + 1);
+	if (temp == NULL)
+		return (NULL);
+	temp[i + j] = '\0';
+	while (j >= 0)
+	{
+		temp[i + j] = addition[j];
+		j--;
+	}
+	if (*original != NULL)
+	{
+		while (i > 0)
+		{
+			temp[i - 1] = *original[i - 1];
+			i--;
+		}
+		free(*original);
+	}
+	*original = temp;
+}
+
+ssize_t			find_line(int fd, t_str_buffer **buff, char **line)
+{
+	t_str_buffer	*relative;
+	char			temp_buffer[BUFFER_SIZE + 1];
+	int				i;
+	ssize_t			bytes;
+
+	relative = *buff;
+	bytes = 0;
+	while (relative->str[i] != '\n')
+	{
+		i++;
+		if (i == BUFFER_SIZE)
+		{
+			if (relative->next == NULL)
+			{
+				bytes = read(fd, &temp_buffer[0], BUFFER_SIZE);
+				if (bytes < 1)
+					return (bytes < 0 ? -1 : 0);
+				temp_buffer[bytes] = '\0';
+			}
+			i = 0;
+			relative = relative->next;
+		}
+	}
+	return (bytes > 0 ? 1 : bytes);
 }
 
 int				get_next_line(int fd, char **line)
 {
-	static t_string_buffer	*buff;
-	ssize_t					ret;
-	char					temp_str[BUFFER_SIZE + 1];
-	t_string_buffer			*relative;
-	off_t					pos;
+	static t_str_buffer	*buff;
+	char				temp_buffer[BUFFER_SIZE + 1];
+	ssize_t				bytes;
 
-	if (line == NULL || fd < 0 || BUFFER_SIZE < 1)
+	if (fd < 0 || line == NULL || BUFFER_SIZE < 1)
 		return (-1);
 	if (buff == NULL)
 	{
-		buff = malloc(sizeof(t_string_buffer));
+		bytes = read(fd, temp_buffer, BUFFER_SIZE);
+		if (bytes < 1)
+			return (bytes < 0 ? -1 : 0);
+		temp_buffer[bytes] = '\0';
+		buff = new_buffer(0, &temp_buffer[0]);
 		if (buff == NULL)
 			return (-1);
-		buff->next = NULL;
-		buff->depth = 0;
 	}
-	// write(1, "2", 1);
-	relative = get_last(buff);
-	// write(1, "a", 1);
-	// pos = find_newline(relative->str);
-	// write(1, "b", 1);
-	ret = read(fd, temp_str, BUFFER_SIZE);
-	// write(1, "c", 1);
-	pos = find_newline(&temp_str[0]);
-	// write(1, "d", 1);
-	temp_str[ret] = 0;
-	relative->str = temp_str;
-	// write(1, "3", 1);
-	while (ret > 0 && pos == -1)
-	{
-		relative->str = temp_str;
-		// sleep(1);
-//		test(temp_str);
-		// write(1, "@", 1);
-		ret = read(fd, temp_str, BUFFER_SIZE);
-		if (ret == 0)
-			break;
-		relative->next = malloc(sizeof(t_string_buffer));
-		if (relative->next == NULL)
-			return (cleanup(&buff));
-		// write(1, "#", 1);
-		relative->next->depth = relative->depth + 1;
-		// write(1, "&", 1);
-		relative = relative->next;
-		// write(1, "$", 1);
-		relative->next = NULL;
-		// write(1, "~", 1);
-		temp_str[ret] = 0;
-		pos = find_newline(&temp_str[0]);
-	}
-	// write(1, "4", 1);
-	*line = combine_string(buff, relative->depth, pos);
-	// write(1, "5", 1);
-	if (ret != 0)
-		ret = (ret < 0) ? -1 : 1;
-	// write(1, "6", 1);
-	return (ret);
+	bytes = find_line(fd, &buff, line);
+	if (bytes < 0)
+		return (-1);
+	return (bytes == 0 ? 0 : 1);
 }
