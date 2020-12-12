@@ -6,7 +6,7 @@
 /*   By: pdruart <pdruart@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/12 11:12:00 by pdruart       #+#    #+#                 */
-/*   Updated: 2020/12/12 11:17:29 by pdruart       ########   odam.nl         */
+/*   Updated: 2020/12/12 17:44:46 by pdruart       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,7 @@
 #  define BUFFER_SIZE 1
 # endif
 
-typedef	struct	s_str_buffer
-{
-	int					depth;
-	char				*str;
-	struct s_str_buffer	*next;
-}				t_str_buffer;
-
-int				get_next_line(int fd, char **line);
+int		get_next_line(int fd, char **line);
+int		ft_strlen(char *str);
+void	str_join(char **original, char *addition);
 #endif
