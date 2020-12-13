@@ -6,7 +6,7 @@
 /*   By: pdruart <pdruart@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/12 11:12:03 by pdruart       #+#    #+#                 */
-/*   Updated: 2020/12/12 17:44:13 by pdruart       ########   odam.nl         */
+/*   Updated: 2020/12/13 18:03:03 by pdruart       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "unistd.h"
 #include "stdlib.h"
 
-int		ft_strlen(char *str)
+int		ft_strlen(const char *str)
 {
 	int	i;
 
@@ -26,28 +26,48 @@ int		ft_strlen(char *str)
 	return (i);
 }
 
-void	str_join(char **original, char *addition)
+char	*ft_strndup(const char *str, size_t n)
+{
+	char	*new;
+	size_t	len;
+	size_t	i;
+
+	len = ft_strlen(str);
+	new = malloc(len + 1);
+	if (new == NULL)
+		return (NULL);
+	i = 0;
+	while (i <= len && i < n)
+	{
+		new[i] = str[i];
+		i++;
+	}
+	new[len] = '\0';
+	return (new);
+}
+
+void   str_join(char **original, char *addition, size_t offset)
 {
 	char	*temp;
-	int		i;
-	int		j;
+	long	i;
+	long	j;
 
-	i = ft_strlen(*original);
+	i = ft_strlen(*original) - (*original == NULL ? 0 : offset);
 	j = ft_strlen(addition);
 	temp = malloc(i + j + 1);
 	if (temp == NULL)
-		return (NULL);
+		return ;
 	temp[i + j] = '\0';
-	while (j >= 0)
+	while (j > 0)
 	{
-		temp[i + j] = addition[j];
+		temp[i + j - 1] = addition[j - 1];
 		j--;
 	}
 	if (*original != NULL)
 	{
 		while (i > 0)
 		{
-			temp[i - 1] = *original[i - 1];
+			temp[i - 1] = *original[offset + i - 1];
 			i--;
 		}
 		free(*original);
