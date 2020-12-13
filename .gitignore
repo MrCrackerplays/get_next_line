@@ -1,0 +1,5 @@
+# maintest.c
+# .gitignore
+# test*.txt
+a.out
+*_original*
