@@ -6,7 +6,7 @@
 /*   By: pdruart <pdruart@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/12 11:10:34 by pdruart       #+#    #+#                 */
-/*   Updated: 2020/12/13 18:04:57 by pdruart       ########   odam.nl         */
+/*   Updated: 2021/03/10 17:45:03 by pdruart       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,16 +43,17 @@
 // 	return (buff);
 // }
 
-
-ssize_t		find_line(int fd, char **buff, char **line)
+ssize_t	find_line(int fd, char **buff, char **line)
 {
 	char	temp_buffer[BUFFER_SIZE + 1];
 	int		i;
 	ssize_t	bytes;
 
-	bytes = (buff[0][0] == '\n' ? 1 : 0);
+	if (buff[0][0] == '\n')
+		bytes = 1;
+	else
+		bytes = 0;
 	i = 0;
-	write(1, "H", 1);
 	while (buff[0][i] != '\n')
 	{
 		if (buff[0][i] == '\0')
@@ -69,34 +70,49 @@ ssize_t		find_line(int fd, char **buff, char **line)
 			bytes = 1;
 	}
 	*line = ft_strndup(*buff, i);
-	// write(1, *buff, 5);
-	write(1, "X", 1);
 	str_join(buff, NULL, i + 1);
-	return (bytes > 0 ? 1 : bytes);
+	return (bytes);
 }
 
-int		get_next_line(int fd, char **line)
+int	setup_buff(char **buff, int fd, char *temp_buffer)
+{
+	ssize_t	bytes;
+
+	bytes = 1;
+	if (*buff == NULL)
+	{
+		bytes = read(fd, temp_buffer, BUFFER_SIZE);
+		if (bytes == 0)
+			return (0);
+		if (bytes < 0)
+			return (-1);
+		temp_buffer[bytes] = '\0';
+		*buff = malloc(sizeof(char));
+		if (*buff == NULL)
+			return (-1);
+		**buff = '\0';
+		str_join(buff, &temp_buffer[0], 0);
+	}
+	return (bytes);
+}
+
+int	get_next_line(int fd, char **line)
 {
 	static char	*buff;
-	char	temp_buffer[BUFFER_SIZE + 1];
-	ssize_t	bytes;
+	char		temp_buffer[BUFFER_SIZE + 1];
+	ssize_t		bytes;
 
 	if (fd < 0 || line == NULL || BUFFER_SIZE < 1)
 		return (-1);
-	if (buff == NULL)
-	{
-		bytes = read(fd, temp_buffer, BUFFER_SIZE);
-		if (bytes < 1)
-			return (bytes < 0 ? -1 : 0);
-		temp_buffer[bytes] = '\0';
-		buff = malloc(sizeof(char));
-		if (buff == NULL)
-			return (-1);
-		*buff = '\0';
-		str_join(&buff, &temp_buffer[0], 0);
-	}
+	bytes = setup_buff(&buff, fd, &temp_buffer[0]);
+	if (bytes < 0)
+		return (-1);
+	if (bytes == 0)
+		return (0);
 	bytes = find_line(fd, &buff, line);
 	if (bytes < 0)
 		return (-1);
-	return (bytes == 0 ? 0 : 1);
+	if (bytes == 0)
+		return (0);
+	return (1);
 }

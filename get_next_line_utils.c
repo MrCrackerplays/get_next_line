@@ -6,7 +6,7 @@
 /*   By: pdruart <pdruart@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/12 11:12:03 by pdruart       #+#    #+#                 */
-/*   Updated: 2020/12/13 18:03:03 by pdruart       ########   odam.nl         */
+/*   Updated: 2021/03/10 17:44:41 by pdruart       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "unistd.h"
 #include "stdlib.h"
 
-int		ft_strlen(const char *str)
+int	ft_strlen(const char *str)
 {
 	int	i;
 
@@ -46,13 +46,20 @@ char	*ft_strndup(const char *str, size_t n)
 	return (new);
 }
 
-void   str_join(char **original, char *addition, size_t offset)
+int	get_max(int a, int b)
+{
+	if (a > b)
+		return (a);
+	return (b);
+}
+
+void	str_join(char **original, char *addition, size_t offset)
 {
 	char	*temp;
 	long	i;
 	long	j;
 
-	i = ft_strlen(*original) - (*original == NULL ? 0 : offset);
+	i = get_max(0, (ft_strlen(*original) - offset));
 	j = ft_strlen(addition);
 	temp = malloc(i + j + 1);
 	if (temp == NULL)
@@ -67,7 +74,7 @@ void   str_join(char **original, char *addition, size_t offset)
 	{
 		while (i > 0)
 		{
-			temp[i - 1] = *original[offset + i - 1];
+			temp[i - 1] = original[0][offset + i - 1];
 			i--;
 		}
 		free(*original);
