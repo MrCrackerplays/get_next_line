@@ -6,7 +6,7 @@
 /*   By: pdruart <pdruart@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/12 11:12:03 by pdruart       #+#    #+#                 */
-/*   Updated: 2021/03/10 17:44:41 by pdruart       ########   odam.nl         */
+/*   Updated: 2021/03/17 12:50:46 by pdruart       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,13 @@ int	ft_strlen(const char *str)
 	return (i);
 }
 
+int	get_max(int a, int b)
+{
+	if (a > b)
+		return (a);
+	return (b);
+}
+
 char	*ft_strndup(const char *str, size_t n)
 {
 	char	*new;
@@ -36,6 +43,7 @@ char	*ft_strndup(const char *str, size_t n)
 	new = malloc(len + 1);
 	if (new == NULL)
 		return (NULL);
+	new[n] = '\0';
 	i = 0;
 	while (i <= len && i < n)
 	{
@@ -44,13 +52,6 @@ char	*ft_strndup(const char *str, size_t n)
 	}
 	new[len] = '\0';
 	return (new);
-}
-
-int	get_max(int a, int b)
-{
-	if (a > b)
-		return (a);
-	return (b);
 }
 
 void	str_join(char **original, char *addition, size_t offset)

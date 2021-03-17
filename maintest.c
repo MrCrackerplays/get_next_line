@@ -6,7 +6,7 @@
 /*   By: pdruart <pdruart@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/02 13:42:34 by pdruart       #+#    #+#                 */
-/*   Updated: 2021/03/10 14:59:49 by pdruart       ########   odam.nl         */
+/*   Updated: 2021/03/17 11:15:41 by pdruart       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,10 @@ int	main(void)
 	line = malloc(256);
 	result = 0;
 	if (result == 0)
-			result = -1;
+		result = -1;
 	c = 1;
 	if (c == 1)
-			c = 'a';
+		c = 'a';
 	test = &line;
 	// *test = "WWWWWWWWWWWWWWWWWW";
 	#ifndef TYPING
@@ -83,14 +83,12 @@ int	main(void)
 	while ((result = get_next_line(fd, &line)) == 1)
 	{
 		write(1, "@#", 2);
-		// spacing(&line);
 		write(1, line, getlen(line));
 		write(1, "#@\n", 3);
 	}
 	if (result == 0)
 	{
 		write(1, "@#", 2);
-		// spacing(&line);
 		write(1, line, getlen(line));
 		write(1, "#@\n", 3);
 		write(1, "\nEOF REACHED", 12);
