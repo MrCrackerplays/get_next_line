@@ -6,7 +6,7 @@
 /*   By: pdruart <pdruart@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/02 13:42:34 by pdruart       #+#    #+#                 */
-/*   Updated: 2021/03/17 11:15:41 by pdruart       ########   odam.nl         */
+/*   Updated: 2021/03/17 18:00:35 by pdruart       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,12 +82,16 @@ int	main(void)
 	// write(1, line, getlen(line));
 	while ((result = get_next_line(fd, &line)) == 1)
 	{
+		if (line == NULL)
+			write(1, "null k1rel", 10);
 		write(1, "@#", 2);
 		write(1, line, getlen(line));
 		write(1, "#@\n", 3);
 	}
 	if (result == 0)
 	{
+		if (line == NULL)
+			write(1, "null k2rel", 10);
 		write(1, "@#", 2);
 		write(1, line, getlen(line));
 		write(1, "#@\n", 3);
