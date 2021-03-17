@@ -6,7 +6,7 @@
 /*   By: pdruart <pdruart@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/12 11:10:34 by pdruart       #+#    #+#                 */
-/*   Updated: 2021/03/10 17:45:03 by pdruart       ########   odam.nl         */
+/*   Updated: 2021/03/17 17:02:24 by pdruart       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,16 +43,20 @@
 // 	return (buff);
 // }
 
+ssize_t	starts_with(char *str, char chr)
+{
+	if (str == NULL || str[0] != chr)
+		return (0);
+	return (1);
+}
+
 ssize_t	find_line(int fd, char **buff, char **line)
 {
 	char	temp_buffer[BUFFER_SIZE + 1];
 	int		i;
 	ssize_t	bytes;
 
-	if (buff[0][0] == '\n')
-		bytes = 1;
-	else
-		bytes = 0;
+	bytes = starts_with(buff[0], '\n');
 	i = 0;
 	while (buff[0][i] != '\n')
 	{
