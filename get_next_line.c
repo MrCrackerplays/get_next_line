@@ -6,7 +6,7 @@
 /*   By: pdruart <pdruart@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/12 11:10:34 by pdruart       #+#    #+#                 */
-/*   Updated: 2021/03/24 12:57:06 by pdruart       ########   odam.nl         */
+/*   Updated: 2021/03/24 16:14:22 by pdruart       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,10 @@ ssize_t	find_line(int fd, char **buff, char **line)
 		if (buff[0][i] == '\0')
 		{
 			bytes = read(fd, &temp_buffer[0], BUFFER_SIZE);
-			if (bytes == 0)
-				break ;
 			temp_buffer[bytes] = '\0';
 			str_join(buff, &temp_buffer[0], 0);
+			if (bytes < BUFFER_SIZE)
+				break ;
 		}
 		else
 			i++;
@@ -72,7 +72,7 @@ int	setup_buff(char **buff, int fd, char *temp_buffer)
 }
 
 int	get_next_line(int fd, char **line)
-{
+{//TODO ZOOI OMGOOIEN ZODAT DE 0 RETURNED WANNEER EOF IS REACHED + WHATEVER WAS IN DE BUFFER NAAR LINE PLAATSEN, IPV (zoals het nu is) WANNEER EOF IS REACHED DE BUG NAAR LINE PLAATSEN EN 1/bytes RETURNEN EN DAN DE VOLGENDE CALL NIETS IN DE LINE DOEN EN 0 RETURNEN (want 0 bytes returned)
 	static char	*buff;
 	char		temp_buffer[BUFFER_SIZE + 1];
 	ssize_t		bytes;
