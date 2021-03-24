@@ -6,7 +6,7 @@
 /*   By: pdruart <pdruart@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/12 11:10:34 by pdruart       #+#    #+#                 */
-/*   Updated: 2021/03/17 17:59:59 by pdruart       ########   odam.nl         */
+/*   Updated: 2021/03/24 12:41:54 by pdruart       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,8 @@ int	setup_buff(char **buff, int fd, char *temp_buffer)
 {
 	ssize_t	bytes;
 
+	if (buff == NULL)
+		return (-1);
 	bytes = 1;
 	if (*buff == NULL)
 	{
@@ -100,24 +102,35 @@ int	setup_buff(char **buff, int fd, char *temp_buffer)
 	return (bytes);
 }
 
-char	*get_buff(int fd, t_string_buffer *buffer_list)
+char	**get_buff(size_t fd, t_string_buffer **buffer_list)
 {
-	char	*buff;
+	char	**buff;
+	char c;
+	t_string_buffer	*buff_list;
 
-	if (buffer_list == NULL)
+	c = '0' + fd;
+	write(1, "get_buff", 8);
+	write(1, &c, 1);
+	write(1, "|", 1);
+	c = c - fd + (*buffer_list)->fd;
+	write(1, &c, 1);
+	if (buffer_list == NULL || (*buffer_list) == NULL)
 		return (NULL);
-	if (buffer_list->fd < fd)
+	if ((*buffer_list)->fd > fd)
+		(*buffer_list) = create_string_buffer(fd, (*buffer_list));
+	buff_list = *buffer_list;
+	if (buff_list->fd < fd)
 	{
-		if (buffer_list->next == NULL)
-			buffer_list->next = create_string_buffer(fd, NULL);
-		else if (buffer_list->next->fd > fd)
-			buffer_list-> next = create_string_buffer(fd, buffer_list->next);
+		if (buff_list->next == NULL)
+			buff_list->next = create_string_buffer(fd, NULL);
+		else if (buff_list->next->fd > fd)
+			buff_list->next = create_string_buffer(fd, buff_list->next);
 	}
-	if (buffer_list->fd == fd)
-		return (&(buffer_list->buff));
-	buff = get_buff(fd, buffer_list->next);
+	if (buff_list->fd == fd)
+		return (&(buff_list->buff));
+	buff = get_buff(fd, &(*buffer_list)->next);
 	if (buff == NULL)
-		buffer_list->next = create_string_buffer(fd, NULL);
+		buff_list->next = create_string_buffer(fd, NULL);
 	return (buff);
 	//dit werkt niet omdat ik de buff als NULL ga returnen wanneer malloc niet lukt, denk ik plus het zit in de knoop met zichzelf
 	//TODO: fix deze functie
@@ -132,9 +145,14 @@ int	get_next_line(int fd, char **line)
 
 	if (fd < 0 || line == NULL || BUFFER_SIZE < 1)
 		return (-1);
+	buffer_list = create_string_buffer(2, create_string_buffer(3, create_string_buffer(6, NULL)));
+	buff = get_buff(1, &buffer_list);
+	buff = get_buff(5, &buffer_list);
+	buff = get_buff(8, &buffer_list);
+	buffer_list = NULL;
 	if (buffer_list == NULL)
 		buffer_list = create_string_buffer(fd, NULL);
-	buff = get_buff(fd, buffer_list);
+	buff = get_buff(fd, &buffer_list);
 	bytes = setup_buff(buff, fd, &temp_buffer[0]);
 	if (bytes < 0)
 		return (-1);

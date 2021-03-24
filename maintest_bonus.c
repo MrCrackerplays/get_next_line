@@ -6,11 +6,11 @@
 /*   By: pdruart <pdruart@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/02 13:42:34 by pdruart       #+#    #+#                 */
-/*   Updated: 2021/03/24 11:49:41 by pdruart       ########   odam.nl         */
+/*   Updated: 2021/03/24 11:39:47 by pdruart       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 #include "fcntl.h"
 #include "stdlib.h"
 #include "unistd.h"
