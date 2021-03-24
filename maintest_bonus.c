@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   maintest.c                                         :+:    :+:            */
+/*   maintest_bonus.c                                   :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: pdruart <pdruart@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/02 13:42:34 by pdruart       #+#    #+#                 */
-/*   Updated: 2021/03/24 11:39:47 by pdruart       ########   odam.nl         */
+/*   Updated: 2021/03/24 12:53:04 by pdruart       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,8 @@ void spacing(char **str)
 int	main(void)
 {
 	int		fd;
+	int		fd1;
+	int		fd2;
 	int		result;
 	char	*line;
 	char	**test;
@@ -64,6 +66,8 @@ int	main(void)
 		c = 'a';
 	test = &line;
 	// *test = "WWWWWWWWWWWWWWWWWW";
+	fd1 = open("test2.txt", O_RDONLY);
+	fd2 = open("test4.txt", O_RDONLY);
 	#ifndef TYPING
 	fd = open(FILENAME, O_RDONLY);
 	#else
@@ -80,6 +84,24 @@ int	main(void)
 	// c = '0' + result;
 	// write(1, &c, 1);
 	// write(1, line, getlen(line));
+	get_next_line(fd, &line);
+	write(1, line, getlen(line));
+	write(1, "!!\n", 3);
+	get_next_line(fd1, &line);
+	write(1, line, getlen(line));
+	write(1, "<<\n", 3);
+	get_next_line(fd2, &line);
+	write(1, line, getlen(line));
+	write(1, ">>\n", 3);
+	get_next_line(fd1, &line);
+	write(1, line, getlen(line));
+	write(1, "^^\n", 3);
+	get_next_line(fd1, &line);
+	write(1, line, getlen(line));
+	write(1, "$$\n", 3);
+	get_next_line(fd, &line);
+	write(1, line, getlen(line));
+	write(1, "**\n", 3);
 	while ((result = get_next_line(fd, &line)) == 1)
 	{
 		if (line == NULL)
@@ -98,4 +120,6 @@ int	main(void)
 		write(1, "\nEOF REACHED", 12);
 	}
 	close(fd);
+	close(fd1);
+	close(fd2);
 }

@@ -6,42 +6,13 @@
 /*   By: pdruart <pdruart@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/12 11:10:34 by pdruart       #+#    #+#                 */
-/*   Updated: 2021/03/24 12:41:54 by pdruart       ########   odam.nl         */
+/*   Updated: 2021/03/24 12:56:40 by pdruart       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 #include "unistd.h"
 #include "stdlib.h"
-
-// t_str_buffer	*new_buffer(int depth, char *str)
-// {
-// 	t_str_buffer	*buff;
-// 	ssize_t			i;
-
-// 	if (str == NULL)
-// 		return (NULL);
-// 	buff = malloc(sizeof(t_str_buffer));
-// 	if (buff == NULL)
-// 		return (NULL);
-// 	i = 0;
-// 	while (str[i] != '\0')
-// 		i++;
-// 	buff->str = malloc((i + 1) * sizeof(char));
-// 	if (buff->str == NULL)
-// 	{
-// 		free(buff);
-// 		return (NULL);
-// 	}
-// 	while (i >= 0)
-// 	{
-// 		buff->str[i] = str[i];
-// 		i--;
-// 	}
-// 	buff->depth = depth;
-// 	buff->next = NULL;
-// 	return (buff);
-// }
 
 ssize_t	starts_with(char *str, char chr)
 {
@@ -104,16 +75,9 @@ int	setup_buff(char **buff, int fd, char *temp_buffer)
 
 char	**get_buff(size_t fd, t_string_buffer **buffer_list)
 {
-	char	**buff;
-	char c;
+	char			**buff;
 	t_string_buffer	*buff_list;
 
-	c = '0' + fd;
-	write(1, "get_buff", 8);
-	write(1, &c, 1);
-	write(1, "|", 1);
-	c = c - fd + (*buffer_list)->fd;
-	write(1, &c, 1);
 	if (buffer_list == NULL || (*buffer_list) == NULL)
 		return (NULL);
 	if ((*buffer_list)->fd > fd)
@@ -132,8 +96,6 @@ char	**get_buff(size_t fd, t_string_buffer **buffer_list)
 	if (buff == NULL)
 		buff_list->next = create_string_buffer(fd, NULL);
 	return (buff);
-	//dit werkt niet omdat ik de buff als NULL ga returnen wanneer malloc niet lukt, denk ik plus het zit in de knoop met zichzelf
-	//TODO: fix deze functie
 }
 
 int	get_next_line(int fd, char **line)
@@ -145,11 +107,6 @@ int	get_next_line(int fd, char **line)
 
 	if (fd < 0 || line == NULL || BUFFER_SIZE < 1)
 		return (-1);
-	buffer_list = create_string_buffer(2, create_string_buffer(3, create_string_buffer(6, NULL)));
-	buff = get_buff(1, &buffer_list);
-	buff = get_buff(5, &buffer_list);
-	buff = get_buff(8, &buffer_list);
-	buffer_list = NULL;
 	if (buffer_list == NULL)
 		buffer_list = create_string_buffer(fd, NULL);
 	buff = get_buff(fd, &buffer_list);
