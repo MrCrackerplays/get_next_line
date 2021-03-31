@@ -6,7 +6,7 @@
 /*   By: pdruart <pdruart@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/12 11:10:34 by pdruart       #+#    #+#                 */
-/*   Updated: 2021/03/24 17:54:56 by pdruart       ########   odam.nl         */
+/*   Updated: 2021/03/31 17:53:15 by pdruart       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,9 +71,34 @@ int	setup_buff(char **buff, int fd, char *temp_buffer)
 	return (bytes);
 }
 
-char	**get_buff(size_t fd, t_string_buffer **buffer_list)
+// char	**get_buff(size_t fd, t_string_buffer **buffer_list)//misschien vanwege memleak deze ombouwen dat ie t_string_buffer returned (als in &(buff_list->next) wanneer de ->next->fd == fd)
+// {
+// 	char			**buff;
+// 	t_string_buffer	*buff_list;
+
+// 	if (buffer_list == NULL || (*buffer_list) == NULL)
+// 		return (NULL);
+// 	if ((*buffer_list)->fd > fd)
+// 		(*buffer_list) = create_string_buffer(fd, (*buffer_list));
+// 	buff_list = *buffer_list;
+// 	if (buff_list->fd < fd)
+// 	{
+// 		if (buff_list->next == NULL)
+// 			buff_list->next = create_string_buffer(fd, NULL);
+// 		else if (buff_list->next->fd > fd)
+// 			buff_list->next = create_string_buffer(fd, buff_list->next);
+// 	}
+// 	if (buff_list->fd == fd)
+// 		return (&(buff_list->buff));
+// 	buff = get_buff(fd, &(*buffer_list)->next);
+// 	if (buff == NULL)
+// 		buff_list->next = create_string_buffer(fd, NULL);
+// 	return (buff);
+// }
+
+//misschien vanwege memleak deze ombouwen dat ie t_string_buffer returned (als in &(buff_list->next) wanneer de ->next->fd == fd)
+t_string_buffer	**get_buff(size_t fd, t_string_buffer **buffer_list)
 {
-	char			**buff;
 	t_string_buffer	*buff_list;
 
 	if (buffer_list == NULL || (*buffer_list) == NULL)
@@ -89,11 +114,11 @@ char	**get_buff(size_t fd, t_string_buffer **buffer_list)
 			buff_list->next = create_string_buffer(fd, buff_list->next);
 	}
 	if (buff_list->fd == fd)
-		return (&(buff_list->buff));
-	buff = get_buff(fd, &(*buffer_list)->next);
-	if (buff == NULL)
-		buff_list->next = create_string_buffer(fd, NULL);
-	return (buff);
+		return (buffer_list);
+	// buff = get_buff(fd, &(*buffer_list)->next);
+	// if (buff == NULL)
+	// 	buff_list->next = create_string_buffer(fd, NULL);
+	// return (buff);
 }
 
 int	get_next_line(int fd, char **line)
@@ -107,11 +132,16 @@ int	get_next_line(int fd, char **line)
 		return (-1);
 	if (buffer_list == NULL)
 		buffer_list = create_string_buffer(fd, NULL);
-	buff = get_buff(fd, &buffer_list);
+	buff = get_buff(fd, &buffer_list)
 	bytes = setup_buff(buff, fd, &temp_buffer[0]);
 	if (bytes < 0)
 		return (-1);
 	bytes = find_line(fd, buff, line);
+	if (bytes < 1)
+	{
+		free(*buff);
+		*buff = NULL;
+	}
 	if (bytes < 0)
 		return (-1);
 	if (bytes == 0)
