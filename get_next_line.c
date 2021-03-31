@@ -6,7 +6,7 @@
 /*   By: pdruart <pdruart@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/12 11:10:34 by pdruart       #+#    #+#                 */
-/*   Updated: 2021/03/24 17:59:34 by pdruart       ########   odam.nl         */
+/*   Updated: 2021/03/31 14:16:52 by pdruart       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int	setup_buff(char **buff, int fd, char *temp_buffer)
 }
 
 int	get_next_line(int fd, char **line)
-{//TODO FIX MEM LEAKS
+{
 	static char	*buff;
 	char		temp_buffer[BUFFER_SIZE + 1];
 	ssize_t		bytes;
@@ -83,6 +83,11 @@ int	get_next_line(int fd, char **line)
 	if (bytes < 0)
 		return (-1);
 	bytes = find_line(fd, &buff, line);
+	if (bytes < 1)
+	{
+		free(buff);
+		buff = NULL;
+	}
 	if (bytes < 0)
 		return (-1);
 	if (bytes == 0)
