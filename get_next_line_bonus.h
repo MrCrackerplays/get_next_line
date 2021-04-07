@@ -6,7 +6,7 @@
 /*   By: pdruart <pdruart@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/12 11:12:00 by pdruart       #+#    #+#                 */
-/*   Updated: 2021/03/31 16:21:29 by pdruart       ########   odam.nl         */
+/*   Updated: 2021/04/07 16:49:54 by pdruart       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 
 typedef struct s_string_buffer
 {
-	size_t					fd;
+	int						fd;
 	char					*buff;
 	struct s_string_buffer	*next;
 }				t_string_buffer;
