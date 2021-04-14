@@ -6,7 +6,7 @@
 /*   By: pdruart <pdruart@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/12 11:12:03 by pdruart       #+#    #+#                 */
-/*   Updated: 2021/03/17 12:50:46 by pdruart       ########   odam.nl         */
+/*   Updated: 2021/04/14 14:07:47 by pdruart       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	str_join(char **original, char *addition, size_t offset)
 	long	i;
 	long	j;
 
-	i = get_max(0, (ft_strlen(*original) - offset));
+	i = get_max(0, (ft_strlen(original[0]) - offset));
 	j = ft_strlen(addition);
 	temp = malloc(i + j + 1);
 	if (temp == NULL)
@@ -78,7 +78,7 @@ void	str_join(char **original, char *addition, size_t offset)
 			temp[i - 1] = original[0][offset + i - 1];
 			i--;
 		}
-		free(*original);
+		free(original[0]);
 	}
-	*original = temp;
+	original[0] = temp;
 }

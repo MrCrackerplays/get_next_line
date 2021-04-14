@@ -6,7 +6,7 @@
 /*   By: pdruart <pdruart@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/12 11:10:34 by pdruart       #+#    #+#                 */
-/*   Updated: 2021/04/14 12:30:11 by pdruart       ########   odam.nl         */
+/*   Updated: 2021/04/14 14:07:48 by pdruart       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,9 @@ ssize_t	find_line(int fd, char **buff, char **line)
 	{
 		if (buff[0][i] == '\0')
 		{
-			bytes = read(fd, &temp_buffer[0], BUFFER_SIZE);
+			bytes = read(fd, &(temp_buffer[0]), BUFFER_SIZE);
 			temp_buffer[bytes] = '\0';
-			str_join(buff, &temp_buffer[0], 0);
+			str_join(buff, &(temp_buffer[0]), 0);
 			if (bytes < 1)
 				break ;
 		}
@@ -44,7 +44,7 @@ ssize_t	find_line(int fd, char **buff, char **line)
 		if (bytes == 0)
 			bytes = 1;
 	}
-	*line = ft_strndup(*buff, i);
+	line[0] = ft_strndup(buff[0], i);
 	str_join(buff, NULL, i + 1);
 	return (bytes);
 }
@@ -57,17 +57,17 @@ int	setup_buff(char **buff, int fd)
 	if (buff == NULL)
 		return (-1);
 	bytes = 1;
-	if (*buff == NULL)
+	if (buff[0] == NULL)
 	{
-		bytes = read(fd, &temp_buffer[0], BUFFER_SIZE);
+		bytes = read(fd, &(temp_buffer[0]), BUFFER_SIZE);
 		if (bytes < 0)
 			return (-1);
 		temp_buffer[bytes] = '\0';
-		*buff = malloc(sizeof(char));
-		if (*buff == NULL)
+		buff[0] = malloc(sizeof(char));
+		if (buff[0] == NULL)
 			return (-1);
-		**buff = '\0';
-		str_join(buff, &temp_buffer[0], 0);
+		buff[0][0] = '\0';
+		str_join(buff, &(temp_buffer[0]), 0);
 	}
 	return (bytes);
 }
