@@ -6,7 +6,7 @@
 /*   By: pdruart <pdruart@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/12 11:10:34 by pdruart       #+#    #+#                 */
-/*   Updated: 2021/04/14 12:16:36 by pdruart       ########   odam.nl         */
+/*   Updated: 2021/04/14 14:00:00 by pdruart       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,8 @@ int	get_next_line(int fd, char **line)
 		free(*buff);
 		*buff = NULL;
 		clean_fd_buffer(fd, &buffer_list);
-		return (-1 * ((bytes >> (sizeof(bytes) * 8 - 1)) & 1));
 	}
-	return (1);
+	if (bytes >= 0)
+		return (bytes > 0);
+	return (-1);
 }
