@@ -6,7 +6,7 @@
 /*   By: pdruart <pdruart@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/12 11:10:34 by pdruart       #+#    #+#                 */
-/*   Updated: 2021/03/31 14:16:52 by pdruart       ########   odam.nl         */
+/*   Updated: 2021/04/14 12:30:11 by pdruart       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,16 +49,17 @@ ssize_t	find_line(int fd, char **buff, char **line)
 	return (bytes);
 }
 
-int	setup_buff(char **buff, int fd, char *temp_buffer)
+int	setup_buff(char **buff, int fd)
 {
 	ssize_t	bytes;
+	char	temp_buffer[BUFFER_SIZE + 1];
 
 	if (buff == NULL)
 		return (-1);
 	bytes = 1;
 	if (*buff == NULL)
 	{
-		bytes = read(fd, temp_buffer, BUFFER_SIZE);
+		bytes = read(fd, &temp_buffer[0], BUFFER_SIZE);
 		if (bytes < 0)
 			return (-1);
 		temp_buffer[bytes] = '\0';
@@ -74,12 +75,11 @@ int	setup_buff(char **buff, int fd, char *temp_buffer)
 int	get_next_line(int fd, char **line)
 {
 	static char	*buff;
-	char		temp_buffer[BUFFER_SIZE + 1];
 	ssize_t		bytes;
 
 	if (fd < 0 || line == NULL || BUFFER_SIZE < 1)
 		return (-1);
-	bytes = setup_buff(&buff, fd, &temp_buffer[0]);
+	bytes = setup_buff(&buff, fd);
 	if (bytes < 0)
 		return (-1);
 	bytes = find_line(fd, &buff, line);

@@ -6,7 +6,7 @@
 /*   By: pdruart <pdruart@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/12 11:10:34 by pdruart       #+#    #+#                 */
-/*   Updated: 2021/04/07 17:24:38 by pdruart       ########   odam.nl         */
+/*   Updated: 2021/04/14 12:16:36 by pdruart       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,16 +42,17 @@ ssize_t	find_line(int fd, char **buff, char **line)
 	return (bytes);
 }
 
-int	setup_buff(char **buff, int fd, char *temp_buffer)
+int	setup_buff(char **buff, int fd)
 {
 	ssize_t	bytes;
+	char	temp_buffer[BUFFER_SIZE + 1];
 
 	if (buff == NULL)
 		return (-1);
 	bytes = 1;
 	if (*buff == NULL)
 	{
-		bytes = read(fd, temp_buffer, BUFFER_SIZE);
+		bytes = read(fd, &temp_buffer[0], BUFFER_SIZE);
 		if (bytes < 0)
 			return (-1);
 		temp_buffer[bytes] = '\0';
@@ -118,7 +119,6 @@ int	get_next_line(int fd, char **line)
 {
 	static t_string_buffer	*buffer_list;
 	char					**buff;
-	char					temp_buffer[BUFFER_SIZE + 1];
 	ssize_t					bytes;
 
 	if (fd < 0 || line == NULL || BUFFER_SIZE < 1)
@@ -126,7 +126,7 @@ int	get_next_line(int fd, char **line)
 	if (buffer_list == NULL)
 		buffer_list = create_string_buffer(fd, NULL);
 	buff = &(*get_buff(fd, &buffer_list))->buff;
-	bytes = setup_buff(buff, fd, &temp_buffer[0]);
+	bytes = setup_buff(buff, fd);
 	if (bytes >= 0)
 		bytes = find_line(fd, buff, line);
 	if (bytes < 1 && buff[0][0] == '\0')
