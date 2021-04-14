@@ -6,7 +6,7 @@
 /*   By: pdruart <pdruart@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/02 13:42:34 by pdruart       #+#    #+#                 */
-/*   Updated: 2021/04/07 17:53:47 by pdruart       ########   odam.nl         */
+/*   Updated: 2021/04/14 13:38:01 by pdruart       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,13 +52,14 @@ void go_read(int fd)
 	int result;
 	char	*line;
 
-	line = malloc(10);
+	line = NULL;
 	while ((result = get_next_line(fd, &line)) == 1)
 	{
 		if (line == NULL)
 			write(1, "null k1rel", 10);
 		write(1, "@#", 2);
 		write(1, line, getlen(line));
+		free(line);
 		write(1, "#@\n", 3);
 	}
 	if (result == 0)
@@ -70,6 +71,7 @@ void go_read(int fd)
 		write(1, "#@\n", 3);
 		write(1, "\nEOF REACHED", 12);
 	}
+	free(line);
 	// ER IS ALSNOG ERGENS EEN LEAK REEEEE
 }
 
@@ -78,31 +80,31 @@ int	main(void)
 	int		fd;
 	// int		fd1;
 	// int		fd2;
-	int		result;
-	char	*line;
-	char	**test;
-	char	c;
+	// int		result;
+	// char	*line;
+	// char	**test;
+	// char	c;
 	int i = 0;
 
-	line = malloc(256);
-	result = 0;
-	if (result == 0)
-		result = -1;
-	c = 1;
-	if (c == 1)
-		c = 'a';
-	test = &line;
+	// line = malloc(256);
+	// result = 0;
+	// if (result == 0)
+	// 	result = -1;
+	// c = 1;
+	// if (c == 1)
+	// 	c = 'a';
+	// test = &line;
 	// *test = "WWWWWWWWWWWWWWWWWW";
 	// fd1 = open("test2.txt", O_RDONLY);
 	// fd2 = open("test4.txt", O_RDONLY);
-	#ifndef TYPING
-	fd = open(FILENAME, O_RDONLY);
-	#else
-	fd = 0;
-	#endif
-	if (fd == 0)
-		write(1, "remember, ^D to exit stdin\n", 27);
-	while (i < 10)
+	// #ifndef TYPING
+	// fd = open(FILENAME, O_RDONLY);
+	// #else
+	// fd = 0;
+	// #endif
+	// if (fd == 0)
+	// 	write(1, "remember, ^D to exit stdin\n", 27);
+	while (i < 100000)
 	{
 		fd = open(FILENAME, O_RDONLY);
 		go_read(fd);
@@ -110,7 +112,7 @@ int	main(void)
 		i++;
 	}
 	write(1, "karel", 5);
-	// while(1);
+	while(1);
 	// result = get_next_line(fd, &line);
 	// c = '0' + result;
 	// write(1, &c, 1);
