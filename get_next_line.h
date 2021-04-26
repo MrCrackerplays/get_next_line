@@ -6,7 +6,7 @@
 /*   By: pdruart <pdruart@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/12 11:12:00 by pdruart       #+#    #+#                 */
-/*   Updated: 2021/03/10 13:48:09 by pdruart       ########   odam.nl         */
+/*   Updated: 2021/04/26 14:32:52 by pdruart       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,5 +20,6 @@
 int		get_next_line(int fd, char **line);
 int		ft_strlen(const char *str);
 char	*ft_strndup(const char *str, size_t n);
-void	str_join(char **original, char *addition, size_t offset);
+char	*str_join(char **original, char *addition, size_t offset);
+long	read_into_buff(int fd, char **buff);
 #endif

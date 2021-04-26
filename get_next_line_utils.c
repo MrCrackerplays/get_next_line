@@ -6,7 +6,7 @@
 /*   By: pdruart <pdruart@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/12 11:12:03 by pdruart       #+#    #+#                 */
-/*   Updated: 2021/04/14 14:07:47 by pdruart       ########   odam.nl         */
+/*   Updated: 2021/04/26 14:52:54 by pdruart       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,6 @@ int	ft_strlen(const char *str)
 	while (str[i] != '\0')
 		i++;
 	return (i);
-}
-
-int	get_max(int a, int b)
-{
-	if (a > b)
-		return (a);
-	return (b);
 }
 
 char	*ft_strndup(const char *str, size_t n)
@@ -54,17 +47,18 @@ char	*ft_strndup(const char *str, size_t n)
 	return (new);
 }
 
-void	str_join(char **original, char *addition, size_t offset)
+char	*str_join(char **original, char *addition, size_t offset)
 {
 	char	*temp;
 	long	i;
 	long	j;
 
-	i = get_max(0, (ft_strlen(original[0]) - offset));
+	i = ft_strlen(original[0]) - offset;
+	i = (i < 0) * 0 + (i >= 0) * i;
 	j = ft_strlen(addition);
 	temp = malloc(i + j + 1);
 	if (temp == NULL)
-		return ;
+		return (NULL);
 	temp[i + j] = '\0';
 	while (j > 0)
 	{
@@ -81,4 +75,19 @@ void	str_join(char **original, char *addition, size_t offset)
 		free(original[0]);
 	}
 	original[0] = temp;
+	return (original[0]);// 2 TOO MANY LINES BUT CAN'T GET RID OF ANY THAT I CAN SEE, NOR CAN STUFF BE MOVED TO A DIFFERENT FUNCTION DUE TO THE BONUS ALREADY HAVING AN EXTRA FUNCTION THUS MEANING THE BONUS COULDN'T BE FIXED
+}
+
+long	read_into_buff(int fd, char **buff)
+{
+	char	temp_buffer[BUFFER_SIZE + 1];
+	long	bytes;
+
+	bytes = read(fd, &(temp_buffer[0]), BUFFER_SIZE);
+	if (bytes < 0)
+		return (bytes);
+	temp_buffer[bytes] = '\0';
+	if (!str_join(buff, &(temp_buffer[0]), 0))
+		return (-1);
+	return (bytes);
 }
