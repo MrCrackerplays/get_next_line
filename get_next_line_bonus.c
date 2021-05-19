@@ -6,7 +6,7 @@
 /*   By: pdruart <pdruart@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/12 11:10:34 by pdruart       #+#    #+#                 */
-/*   Updated: 2021/04/14 14:17:26 by pdruart       ########   odam.nl         */
+/*   Updated: 2021/05/19 17:53:34 by pdruart       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 
 ssize_t	find_line(int fd, char **buff, char **line)
 {
-	char	temp_buffer[BUFFER_SIZE + 1];
 	int		i;
 	ssize_t	bytes;
 
@@ -26,10 +25,10 @@ ssize_t	find_line(int fd, char **buff, char **line)
 	{
 		if (buff[0][i] == '\0')
 		{
-			bytes = read(fd, &(temp_buffer[0]), BUFFER_SIZE);
-			temp_buffer[bytes] = '\0';
-			str_join(buff, &(temp_buffer[0]), 0);
-			if (bytes < 1)
+			bytes = read_into_buff(fd, buff);
+			if (bytes < 0)
+				return (-1);
+			if (bytes == 0)
 				break ;
 		}
 		else
@@ -38,7 +37,8 @@ ssize_t	find_line(int fd, char **buff, char **line)
 			bytes = 1;
 	}
 	line[0] = ft_strndup(buff[0], i);
-	str_join(buff, NULL, i + 1);
+	if (!str_join(buff, NULL, i + 1, 0))
+		return (-1);
 	return (bytes);
 }
 
@@ -60,7 +60,8 @@ int	setup_buff(char **buff, int fd)
 		if (buff[0] == NULL)
 			return (-1);
 		buff[0][0] = '\0';
-		str_join(buff, &(temp_buffer[0]), 0);
+		if (!str_join(buff, &(temp_buffer[0]), 0, ft_strlen(&(temp_buffer[0]))))
+			return (-1);
 	}
 	return (bytes);
 }
