@@ -6,7 +6,7 @@
 /*   By: pdruart <pdruart@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/12 11:10:34 by pdruart       #+#    #+#                 */
-/*   Updated: 2021/04/26 14:32:33 by pdruart       ########   odam.nl         */
+/*   Updated: 2021/05/19 17:39:10 by pdruart       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ ssize_t	find_line(int fd, char **buff, char **line)
 			bytes = 1;
 	}
 	line[0] = ft_strndup(buff[0], i);
-	if (!str_join(buff, NULL, i + 1))
+	if (!str_join(buff, NULL, i + 1, 0))
 		return (-1);
 	return (bytes);
 }
@@ -60,7 +60,7 @@ int	setup_buff(char **buff, int fd)
 		if (buff[0] == NULL)
 			return (-1);
 		buff[0][0] = '\0';
-		if (!str_join(buff, &(temp_buffer[0]), 0))
+		if (!str_join(buff, &(temp_buffer[0]), 0, ft_strlen(&(temp_buffer[0]))))
 			return (-1);
 	}
 	return (bytes);
