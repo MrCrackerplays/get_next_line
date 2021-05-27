@@ -6,7 +6,7 @@
 /*   By: pdruart <pdruart@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/12 11:12:00 by pdruart       #+#    #+#                 */
-/*   Updated: 2021/05/19 17:48:34 by pdruart       ########   odam.nl         */
+/*   Updated: 2021/05/27 13:16:54 by pdruart       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ typedef struct s_string_buffer
 }				t_string_buffer;
 t_string_buffer	*create_string_buffer(int fd, t_string_buffer *next);
 int				get_next_line(int fd, char **line);
-int				ft_strlen(const char *str);
+int				gnl_strlen(const char *str);
 char			*ft_strndup(const char *str, size_t n);
 char			*str_join(char **origin, char *addition, size_t offset, long j);
 long			read_into_buff(int fd, char **buff);

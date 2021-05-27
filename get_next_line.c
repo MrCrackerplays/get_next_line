@@ -6,7 +6,7 @@
 /*   By: pdruart <pdruart@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/12 11:10:34 by pdruart       #+#    #+#                 */
-/*   Updated: 2021/05/27 13:08:49 by pdruart       ########   odam.nl         */
+/*   Updated: 2021/05/27 13:18:25 by pdruart       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,22 +46,22 @@ ssize_t	find_line(int fd, char **buff, char **line, int count)
 int	setup_buff(char **buff, int fd)
 {
 	ssize_t	bytes;
-	char	temp_buffer[BUFFER_SIZE + 1];
+	char	tmp_buffer[BUFFER_SIZE + 1];
 
 	if (buff == NULL)
 		return (-1);
 	bytes = 1;
 	if (buff[0] == NULL)
 	{
-		bytes = read(fd, &(temp_buffer[0]), BUFFER_SIZE);
+		bytes = read(fd, &(tmp_buffer[0]), BUFFER_SIZE);
 		if (bytes < 0)
 			return (-1);
-		temp_buffer[bytes] = '\0';
+		tmp_buffer[bytes] = '\0';
 		buff[0] = malloc(sizeof(char));
 		if (buff[0] == NULL)
 			return (-1);
 		buff[0][0] = '\0';
-		if (!str_join(buff, &(temp_buffer[0]), 0, ft_strlen(&(temp_buffer[0]))))
+		if (!str_join(buff, &(tmp_buffer[0]), 0, gnl_strlen(&(tmp_buffer[0]))))
 			return (-1);
 	}
 	return (bytes);
