@@ -6,7 +6,7 @@
 /*   By: pdruart <pdruart@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/12 11:10:34 by pdruart       #+#    #+#                 */
-/*   Updated: 2021/05/19 17:39:10 by pdruart       ########   odam.nl         */
+/*   Updated: 2021/05/27 13:08:49 by pdruart       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "unistd.h"
 #include "stdlib.h"
 
-ssize_t	find_line(int fd, char **buff, char **line)
+ssize_t	find_line(int fd, char **buff, char **line, int count)
 {
 	int		i;
 	ssize_t	bytes;
@@ -25,7 +25,8 @@ ssize_t	find_line(int fd, char **buff, char **line)
 	{
 		if (buff[0][i] == '\0')
 		{
-			bytes = read_into_buff(fd, buff);
+			if (fd != 1 || count != 0)
+				bytes = read_into_buff(fd, buff);
 			if (bytes < 0)
 				return (-1);
 			if (bytes == 0)
@@ -76,7 +77,7 @@ int	get_next_line(int fd, char **line)
 	bytes = setup_buff(&buff, fd);
 	if (bytes < 0)
 		return (-1);
-	bytes = find_line(fd, &buff, line);
+	bytes = find_line(fd, &buff, line, bytes);
 	if (bytes < 1)
 	{
 		free(buff);
