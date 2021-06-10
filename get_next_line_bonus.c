@@ -25,7 +25,7 @@ ssize_t	find_line(int fd, char **buff, char **line, int count)
 	{
 		if (buff[0][i] == '\0')
 		{
-			if (fd != 1 || count != 0)
+			if (fd != 0 || count != 0)
 				bytes = read_into_buff(fd, buff);
 			if (bytes < 0)
 				return (-1);
